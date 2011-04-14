@@ -1,4 +1,5 @@
 import os
+import traceback
 
 from datetime import datetime
 
@@ -10,8 +11,11 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 class GameLogEntry(db.Model):
   receive_time = db.DateTimeProperty()
-  game_html = db.StringProperty()
   settings = db.StringProperty()
+  game_id = db.StringProperty()
+  reporter = db.StringProperty()
+  correct_score = db.BooleanProperty()
+  game_html = db.TextProperty()
 
 class MainPage(webapp.RequestHandler):
   def get(self):
@@ -29,17 +33,19 @@ class LogGame(webapp.RequestHandler):
       log_key = '%s06%d' % (time.strftime('%s'), time.microsecond)
       log_entry = GameLogEntry(key_name=log_key)
       log_entry.receive_time = time
-      log_entry.game_html = self.request.get('log')
       log_entry.settings = self.request.get('settings')
+      log_entry.game_id = self.request.get('game_id')
+      log_entry.reporter = self.request.get('reporter')
+      log_entry.correct_score = self.request.get('correct_score') == "true"
+      log_entry.game_html = self.request.get('log')
       db.put(log_entry)
-      print log_entry.to_xml()
 
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write('OK')
 
     except Exception, e:
       message = mail.EmailMessage(sender='drheld@gmail.com',
-                                  subject='A dominion logger error has occurred.') 
+                                  subject='A dominion logger error has occurred.')
       message.to = 'drheld@gmail.com'
       message.body = str(e) + '\n\n\n' + traceback.format_exc() + \
                      '\n\nRequest:' + str(self.request)
