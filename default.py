@@ -54,9 +54,25 @@ class LogGame(webapp.RequestHandler):
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write('ERROR')
 
+
+class FetchGame(webapp.RequestHandler):
+  def get(self):
+    self.redirect('/')
+
+  def post(self):
+    key = db.Key.from_path('GameLogEntry', self.request.get('key'));
+    log_entry = db.get(key)
+
+    self.response.headers['Content-Type'] = 'text/plain'
+    self.response.out.write(log_entry.game_html)
+
+
 application = webapp.WSGIApplication(
-    [('/', MainPage),
-     ('/log_game', LogGame)],
+    [
+     ('/', MainPage),
+     ('/log_game', LogGame),
+     ('/fetch_game', FetchGame),
+    ],
     debug=True)
 
 def main():
