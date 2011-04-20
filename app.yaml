@@ -1,8 +1,13 @@
 application: dominion-point-counter
-version: 1
+version: 2-test
 runtime: python
 api_version: 1
 
 handlers:
+
+- url: /debug.*
+  script: debug.py
+  login: admin
+
 - url: /.*
   script: default.py

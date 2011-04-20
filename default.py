@@ -3,25 +3,23 @@ import traceback
 
 from datetime import datetime
 
-from google.appengine.ext import db
+from google.appengine.api import users
 from google.appengine.api import mail
+
+from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-class GameLogEntry(db.Model):
-  receive_time = db.DateTimeProperty()
-  settings = db.StringProperty()
-  game_id = db.StringProperty()
-  reporter = db.StringProperty()
-  correct_score = db.BooleanProperty()
-  game_html = db.TextProperty()
+# Local imports.
+from game_log_entry import GameLogEntry
 
 class MainPage(webapp.RequestHandler):
   def get(self):
     template_values = {}
     path = os.path.join(os.path.dirname(__file__), 'html/index.html')
     self.response.out.write(template.render(path, template_values))
+
 
 class LogGame(webapp.RequestHandler):
   def get(self):
@@ -36,12 +34,12 @@ class LogGame(webapp.RequestHandler):
       log_entry.settings = self.request.get('settings')
       log_entry.game_id = self.request.get('game_id')
       log_entry.reporter = self.request.get('reporter')
-      log_entry.correct_score = self.request.get('correct_score') == "true"
+      log_entry.correct_score = (self.request.get('correct_score') == "true")
       log_entry.game_html = self.request.get('log')
       db.put(log_entry)
 
       self.response.headers['Content-Type'] = 'text/plain'
-      self.response.out.write('OK')
+      self.response.out.write('OK\n')
 
     except Exception, e:
       message = mail.EmailMessage(sender='drheld@gmail.com',
@@ -67,11 +65,25 @@ class FetchGame(webapp.RequestHandler):
     self.response.out.write(log_entry.game_html)
 
 
+class Login(webapp.RequestHandler):
+  def get(self):
+    user = users.get_current_user()
+    if user:
+      greeting = ("Welcome, %s! (<a href=\"%s\">sign out</a>)" %
+                  (user.nickname(), users.create_logout_url("/")))
+    else:
+      greeting = ("<a href=\"%s\">Sign in or register</a>." %
+                  users.create_login_url("/"))
+
+    self.response.out.write("<html><body>%s</body></html>" % greeting)
+
+
 application = webapp.WSGIApplication(
     [
      ('/', MainPage),
      ('/log_game', LogGame),
      ('/fetch_game', FetchGame),
+     ('/login', Login),
     ],
     debug=True)
 

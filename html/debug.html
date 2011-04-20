@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Dominion Point Counter Debugger</title>
+</head>
+
+<body>
+  <div id="header">
+    Primary key: {{ primary_key }}<br>
+    Reporter: {{ reporter }}<br>
+    Receive Time: {{ receive_time }}<br>
+    Game link: {{ game_link }}<br>
+  </div>
+  <br>
+
+  <div id="log_data" style="display: none;">
+    {{ game_log }}
+  </div>
+
+  <div id="results">
+  </div>
+
+  <br>
+  <br>
+
+  <div id="mark_done">
+    <form action='/debug_del' method='post'>
+      <input type='hidden' name='key' value='{{ primary_key }}'>
+      <input type='submit' value='Delete This Item'>
+    </form>
+  </div>
+</body>
