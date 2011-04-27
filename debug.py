@@ -40,10 +40,14 @@ class Debug(webapp.RequestHandler):
     link_parts = re.search('game-([0-9]{6})([0-9]{2})-', result.game_id)
     url = 'http://dominion.isotropic.org/gamelog/'
     url += link_parts.group(1) + '/' + link_parts.group(2) + '/' + result.game_id
-    game_link = '<a href="%s">%s</a>' % (url, url)
+    game_link = '<a href="%s" id="game_link">%s</a>' % (url, url)
     template_values['game_link'] = game_link
 
-    template_values['game_log'] = result.game_html
+    # Clean the html and dump it.
+    game_html = result.game_html
+    game_html = re.sub(r'<img [^>]*>', r'<img src="">', game_html)
+    game_html = re.sub(r'<embed [^>]*>', r'', game_html)
+    template_values['game_log'] = game_html
 
     path = os.path.join(os.path.dirname(__file__), 'html/debug.html')
     self.response.out.write(template.render(path, template_values))
