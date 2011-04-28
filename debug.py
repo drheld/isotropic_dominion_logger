@@ -33,7 +33,7 @@ class Debug(webapp.RequestHandler):
     template_values = {}
 
     template_values['primary_key'] = result.key().name()
-    template_values['version'] = result.key().version()
+    template_values['version'] = result.version
     template_values['reporter'] = result.reporter
     template_values['receive_time'] = str(result.receive_time)
     template_values['settings'] = result.settings
