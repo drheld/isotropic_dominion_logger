@@ -31,6 +31,7 @@ class LogGame(webapp.RequestHandler):
       log_key = '%s06%d' % (time.strftime('%s'), time.microsecond)
       log_entry = GameLogEntry(key_name=log_key)
       log_entry.receive_time = time
+      log_entry.version = self.request.get('version')
       log_entry.settings = self.request.get('settings')
       log_entry.game_id = self.request.get('game_id')
       log_entry.reporter = self.request.get('reporter')
