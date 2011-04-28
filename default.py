@@ -1,5 +1,6 @@
 import os
 import traceback
+import zlib
 
 from datetime import datetime
 
@@ -36,7 +37,7 @@ class LogGame(webapp.RequestHandler):
       log_entry.game_id = self.request.get('game_id')
       log_entry.reporter = self.request.get('reporter')
       log_entry.correct_score = (self.request.get('correct_score') == "true")
-      log_entry.game_html = self.request.get('log')
+      log_entry.game_log = zlib.compress(self.request.get('log'))
       db.put(log_entry)
 
       self.response.headers['Content-Type'] = 'text/plain'
@@ -52,6 +53,7 @@ class LogGame(webapp.RequestHandler):
 
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write('ERROR')
+      self.response.out.write(message.body)
 
 
 class FetchGame(webapp.RequestHandler):
