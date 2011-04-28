@@ -1,6 +1,7 @@
 import os
 import re
 import traceback
+import zlib
 
 from datetime import datetime
 
@@ -46,6 +47,8 @@ class Debug(webapp.RequestHandler):
 
     # Clean the html and dump it.
     game_html = result.game_html
+    if game_html is None or game_html == "":
+      game_html = zlib.decompress(result.game_log)
     game_html = re.sub(r'<img [^>]*>', r'<img src="">', game_html)
     game_html = re.sub(r'<embed [^>]*>', r'', game_html)
     template_values['game_log'] = game_html

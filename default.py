@@ -53,7 +53,6 @@ class LogGame(webapp.RequestHandler):
 
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write('ERROR')
-      self.response.out.write(message.body)
 
 
 class FetchGame(webapp.RequestHandler):
