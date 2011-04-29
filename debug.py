@@ -19,7 +19,13 @@ from game_log_entry import GameLogEntry
 class Debug(webapp.RequestHandler):
   def get(self):
     query = db.Query(GameLogEntry)
-    query.filter('correct_score =', False)
+
+    if self.request.get('id'):
+      query.filter('__key__ =',
+                   db.Key.from_path('GameLogEntry', self.request.get('id')));
+    else:
+      query.filter('correct_score =', False)
+
     results = query.fetch(limit=1)
 
     if len(results) != 1:
@@ -48,7 +54,7 @@ class Debug(webapp.RequestHandler):
     # Clean the html and dump it.
     game_html = result.game_html
     if game_html is None or game_html == "":
-      game_html = zlib.decompress(result.game_log)
+      game_html = unicode(zlib.decompress(result.game_log), 'utf-8')
     game_html = re.sub(r'<img [^>]*>', r'<img src="">', game_html)
     game_html = re.sub(r'<embed [^>]*>', r'', game_html)
     template_values['game_log'] = game_html

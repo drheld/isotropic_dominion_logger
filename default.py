@@ -36,8 +36,8 @@ class LogGame(webapp.RequestHandler):
       log_entry.settings = self.request.get('settings')
       log_entry.game_id = self.request.get('game_id')
       log_entry.reporter = self.request.get('reporter')
-      log_entry.correct_score = (self.request.get('correct_score') == "true")
-      log_entry.game_log = zlib.compress(self.request.get('log'))
+      log_entry.correct_score = (self.request.get('correct_score') == 'true')
+      log_entry.game_log = zlib.compress(self.request.get('log').encode('utf-8'))
       db.put(log_entry)
 
       self.response.headers['Content-Type'] = 'text/plain'
