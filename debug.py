@@ -20,6 +20,21 @@ class Debug(webapp.RequestHandler):
   def get(self):
     query = db.Query(GameLogEntry)
 
+    if self.request.get('delete_older_than'):
+      query.filter('__key__ <',
+                   db.Key.from_path('GameLogEntry',
+                                    self.request.get('delete_older_than')))
+      count = 0
+      while True:
+        entries = query.fetch(200)
+        count += len(entries)
+        if (len(entries) == 0): break
+        db.delete(entries)
+
+      self.response.headers['Content-Type'] = 'text/plain'
+      self.response.out.write('Deleted ' + str(count) + ' log entries.')
+      return
+
     if self.request.get('id'):
       query.filter('__key__ =',
                    db.Key.from_path('GameLogEntry', self.request.get('id')));
@@ -52,9 +67,7 @@ class Debug(webapp.RequestHandler):
     template_values['game_link'] = game_link
 
     # Clean the html and dump it.
-    game_html = result.game_html
-    if game_html is None or game_html == "":
-      game_html = unicode(zlib.decompress(result.game_log), 'utf-8')
+    game_html = unicode(zlib.decompress(result.game_log), 'utf-8')
     game_html = re.sub(r'<img [^>]*>', r'<img src="">', game_html)
     game_html = re.sub(r'<embed [^>]*>', r'', game_html)
     template_values['game_log'] = game_html

@@ -7,5 +7,5 @@ class GameLogEntry(db.Model):
   game_id = db.StringProperty()
   reporter = db.StringProperty()
   correct_score = db.BooleanProperty()
-  game_html = db.TextProperty()
+  player_json = db.TextProperty()
   game_log = db.BlobProperty()
