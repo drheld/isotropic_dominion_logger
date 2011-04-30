@@ -58,6 +58,7 @@ class Debug(webapp.RequestHandler):
     template_values['version'] = result.version
     template_values['reporter'] = result.reporter
     template_values['receive_time'] = str(result.receive_time)
+    template_values['player_json'] = result.player_json
     template_values['settings'] = result.settings
 
     link_parts = re.search('game-([0-9]{6})([0-9]{2})-', result.game_id)
