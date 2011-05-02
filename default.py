@@ -37,8 +37,8 @@ class LogGame(webapp.RequestHandler):
       log_entry.game_id = self.request.get('game_id')
       log_entry.reporter = self.request.get('reporter')
       log_entry.correct_score = (self.request.get('correct_score') == 'true')
-      log_entry.player_json = self.request.get('player_json')
-      log_entry.state_strings = self.request.get('state_strings')
+      log_entry.player_json = self.request.get('player_json').encode('utf-8')
+      log_entry.state_strings = self.request.get('state_strings').encode('utf-8')
       log_entry.game_log = zlib.compress(self.request.get('log').encode('utf-8'))
       db.put(log_entry)
 
