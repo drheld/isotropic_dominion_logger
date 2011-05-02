@@ -27,9 +27,10 @@
   <br>
 
   <div id="mark_done">
-    <form action='/debug_del' method='post'>
+    <form action='/debug_done' method='post'>
       <input type='hidden' name='key' value='{{ primary_key }}'>
-      <input type='submit' value='Delete This Item'>
+      <input type='submit' name='delete' value='Delete This Item'>
+      <input type='submit' name='save' value='Save This As A Test'>
     </form>
   </div>
 </body>

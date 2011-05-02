@@ -77,21 +77,32 @@ class Debug(webapp.RequestHandler):
     self.response.out.write(template.render(path, template_values))
 
 
-class DebugDel(webapp.RequestHandler):
+class DebugDone(webapp.RequestHandler):
   def get(self):
     self.redirect('/debug')
 
   def post(self):
     key = db.Key.from_path('GameLogEntry', self.request.get('key'));
     log_entry = db.get(key)
-    db.delete(log_entry)
+
+    if (self.request.get('delete') != ''):
+      db.delete(log_entry)
+    elif (self.request.get('save') != ''):
+      log_entry.correct_score = True
+      log_entry.test_case = True
+      db.put(log_entry)
+    else:
+      self.response.headers['Content-Type'] = 'text/plain'
+      self.response.out.write('Unknown debug done request.')
+      return
+
     self.redirect('/debug')
 
 
 application = webapp.WSGIApplication(
     [
      ('/debug', Debug),
-     ('/debug_del', DebugDel),
+     ('/debug_done', DebugDone),
     ],
     debug=True)
 
