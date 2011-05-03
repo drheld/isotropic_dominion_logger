@@ -7,20 +7,24 @@
 
 <body>
   <div id="header">
-    Primary key: {{ primary_key }}<br>
-    Extension version: {{ version }}<br>
-    Reporter: {{ reporter }}<br>
-    Receive Time: {{ receive_time }}<br>
-    Player Json: {{ player_json }}<br>
-    Game link: {{ game_link }}<br>
+    <b>Primary key</b>: {{ primary_key }}<br>
+    <b>Extension version</b>: {{ version }}<br>
+    <b>Reporter</b>: {{ reporter }}<br>
+    <b>Receive Time</b>: {{ receive_time }}<br>
+    <b>Player Json</b>: {{ player_json }}<br>
+    <b>Game link</b>: {{ game_link }}<br>
   </div>
-  <br>
+
+  <br><br>== Old Extension Results ==<br>
+  {{ state_strings }}
+  <br><br>
 
   <div id="log_data" style="display: none;">
     {{ game_log }}
   </div>
 
   <div id="results">
+    == Current Extension Results ==<br>
   </div>
 
   <br>
