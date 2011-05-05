@@ -58,7 +58,6 @@ class Debug(webapp.RequestHandler):
     template_values['version'] = result.version
     template_values['reporter'] = result.reporter
     template_values['receive_time'] = str(result.receive_time)
-    template_values['player_json'] = result.player_json
     template_values['state_strings'] = result.state_strings
     template_values['settings'] = result.settings
 
