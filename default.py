@@ -45,13 +45,6 @@ class LogGame(webapp.RequestHandler):
       self.response.out.write('OK\n')
 
     except Exception, e:
-      message = mail.EmailMessage(sender='drheld@gmail.com',
-                                  subject='A dominion logger error has occurred.')
-      message.to = 'drheld@gmail.com'
-      message.body = str(e) + '\n\n\n' + traceback.format_exc() + \
-                     '\n\nRequest:' + str(self.request)
-      message.send()
-
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write('ERROR')
 
